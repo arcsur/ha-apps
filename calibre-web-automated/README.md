@@ -1,4 +1,4 @@
-# Home Assistant App: Example app
+# Calibre Web Automated
 
 _Example app to use as a blueprint for new apps._
 
