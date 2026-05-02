@@ -27,8 +27,8 @@ options:
   calibre_plugins_path: "/calibre_plugins"
 schema:
   hard_cover_token: "str?"
-  network_share_mode: "bool?"
-  config_path: "str?"
-  ingest_path: "str?"
-  calibre_library_path: "str?"
+  network_share_mode: bool
+  config_path: str
+  ingest_path: str
+  calibre_library_path: str
   calibre_plugins_path: "str?"
