@@ -1,0 +1,17 @@
+# https://developers.home-assistant.io/docs/apps/configuration#app-configuration
+name: Calibre Web Automated
+version: "4.0.6"
+slug: calibre-web-automated
+description: Calibre Web Automated app
+url: "https://github.com/arcsur/ha-apps/calibre-web-automated"
+arch:
+  - aarch64
+  - amd64
+init: false
+map:
+  - share:rw
+options:
+  message: "Hello world..."
+schema:
+  message: "str?"
+image: "ghcr.io/crocodilestick/calibre-web-automated"
