@@ -13,7 +13,7 @@ apparmor: false
 ports:
   - 8083/tcp: 8083
 ports_description:
-  - 8083: Web UI/ODPS
+  - 8083/tcp: "Web UI/ODPS"
 ingress: true
 ingress_port: 8083
 map:
