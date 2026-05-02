@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: Calibre Web Automated
-version: "0.2.1"
+version: "0.2.2"
 slug: calibre-web-automated
 description: Calibre-Web Automated aims to be an all-in-one solution, combining the modern lightweight web UI from Calibre-Web with the robust, versatile feature set of Calibre, with a slew of extra features and automations thrown in on top.
 url: "https://github.com/arcsur/ha-apps/tree/main/calibre-web-automated"
@@ -11,9 +11,9 @@ arch:
   - amd64
 apparmor: false
 ports:
-  - 8083/tcp: 8083
+  8083/tcp: 8083
 ports_description:
-  - 8083/tcp: "Web UI/ODPS"
+  8083/tcp: "Web UI/ODPS"
 ingress: true
 ingress_port: 8083
 map:
