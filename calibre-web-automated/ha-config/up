@@ -1,0 +1,53 @@
+#!/usr/bin/with-contenv bashio
+
+# This script is responsible for setting up the environment for the Calibre Web Automated add-on.
+# It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
+readonly CONFIG_PATH=/config
+readonly INGEST_PATH=/cwa-book-ingest
+readonly CALIBRE_LIBRARY_PATH=/calibre-library
+readonly CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins/
+
+declare hardcover_token
+declare network_share_mode
+declare config_path
+declare ingest_path
+declare calibre_library_path
+declare calibre_plugins_path
+
+hardcover_token=$(bashio::config 'hard_cover_token')
+network_share_mode=$(bashio::config 'network_share_mode')
+config_path=$(bashio::config 'config_path')
+ingest_path=$(bashio::config 'ingest_path')
+calibre_library_path=$(bashio::config 'calibre_library_path')
+calibre_plugins_path=$(bashio::config 'calibre_plugins_path')
+
+bashio::log.info "Configuring environment..."
+echo -n "${hardcover_token}" > /etc/s6-overlay/env/HARDCOVER_TOKEN
+echo -n "${network_share_mode}" > /etc/s6-overlay/env/NETWORK_SHARE_MODE
+
+map_path() {
+    local mapped_path="${1}"
+    local app_path="${2}"
+
+    # Ensure the host-mapped directory exists (e.g., /share/my_folder)
+    if ! bashio::fs.directory_exists "${mapped_path}"; then
+        bashio::log.info "Creating directory ${mapped_path}"
+        mkdir -p "${mapped_path}"
+    fi
+    # If the app's default directory exists and isn't a link, move it or remove it
+    if [ -d "${app_path}" ] && [ ! -L "${app_path}" ]; then
+        bashio::log.debug "Removing existing internal directory to make room for symlink"
+        rm -rf "${app_path}"
+    fi
+    # Create the link
+    ln -s "${mapped_path}" "${app_path}"
+    bashio::log.success "Successfully mapped ${app_path} to ${mapped_path}"
+}
+
+bashio::log.info "Mapping paths..."
+map_path "${config_path}" "${CONFIG_PATH}"
+map_path "${ingest_path}" "${INGEST_PATH}"
+map_path "${calibre_library_path}" "${CALIBRE_LIBRARY_PATH}"
+map_path "${calibre_plugins_path}" "${CALIBRE_PLUGINS_PATH}"
+
+bashio::log.info "Environment setup complete."

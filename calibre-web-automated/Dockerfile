@@ -3,22 +3,28 @@ ARG BUILD_FROM=ghcr.io/crocodilestick/calibre-web-automated:v4.0.6
 FROM ${BUILD_FROM}
 
 # Execute during the build of the image
-ARG TEMPIO_VERSION=2021.09.0
 ARG TARGETARCH
-RUN \
-    if [ -z "${TARGETARCH}" ]; then \
-    echo "TARGETARCH is not set, please use Docker BuildKit for the build." && exit 1; \
-    fi \
-    && case "${TARGETARCH}" in \
-    amd64) tempio_arch="amd64" ;; \
-    arm64) tempio_arch="aarch64" ;; \
-    *) echo "Unsupported TARGETARCH: ${TARGETARCH}" && exit 1 ;; \
-    esac \
-    && curl -sSLf -o /usr/bin/tempio \
-    "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${tempio_arch}"
+ARG TEMPIO_VERSION=2021.09.0
 
-# Copy root filesystem
-#COPY rootfs /
+# Install dependencies for bashio (curl and jq)
+RUN apt-get update && apt-get install -y curl jq && rm -rf /var/lib/apt/lists/*
+
+# Install bashio
+RUN curl -J -L -o /tmp/bashio.tar.gz "https://github.com/hassio-addons/bashio/archive/${BASHIO_VERSION}.tar.gz" \
+    && mkdir /tmp/bashio \
+    && tar zxvf /tmp/bashio.tar.gz --strip 1 -C /tmp/bashio \
+    && mv /tmp/bashio/lib /usr/lib/bashio \
+    && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
+    && rm -rf /tmp/bashio.tar.gz /tmp/bashio
+
+# Copy your s6-rc service
+COPY ha-config/ /etc/s6-overlay/s6-rc.d/ha-config/
+
+# Register the service in the user bundle and set permissions
+RUN chmod +x /etc/s6-overlay/s6-rc.d/ha-config/up \
+    && mkdir -p /etc/s6-overlay/s6-rc.d/user/contents.d \
+    && touch /etc/s6-overlay/s6-rc.d/user/contents.d/ha-config \
+    && touch /etc/s6-overlay/s6-rc.d/cwa-init/dependencies.d/ha-config
 
 LABEL \
     org.opencontainers.image.title="Calibre Web Automated" \
