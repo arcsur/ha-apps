@@ -4,7 +4,7 @@ FROM ${BUILD_FROM}
 
 # Execute during the build of the image
 ARG TARGETARCH
-ARG TEMPIO_VERSION=2021.09.0
+ARG BASHIO_VERSION=v0.17.5
 
 # Install dependencies for bashio (curl and jq)
 RUN apt-get update && apt-get install -y curl jq && rm -rf /var/lib/apt/lists/*
