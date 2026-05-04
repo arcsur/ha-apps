@@ -2,10 +2,10 @@
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
-readonly CONFIG_PATH=/config
-readonly INGEST_PATH=/cwa-book-ingest
-readonly CALIBRE_LIBRARY_PATH=/calibre-library
-readonly CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins/
+declare -r CONFIG_PATH=/config
+declare -r INGEST_PATH=/cwa-book-ingest
+declare -r CALIBRE_LIBRARY_PATH=/calibre-library
+declare -r CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins/
 
 declare hardcover_token
 declare network_share_mode
