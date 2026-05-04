@@ -3,10 +3,10 @@
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
-declare -r CONFIG_PATH=/config
-declare -r INGEST_PATH=/cwa-book-ingest
-declare -r CALIBRE_LIBRARY_PATH=/calibre-library
-declare -r CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
+CONFIG_PATH=/config
+INGEST_PATH=/cwa-book-ingest
+CALIBRE_LIBRARY_PATH=/calibre-library
+CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
 
 # Function to stop the script from running to debug the environment
 debug_script() {
