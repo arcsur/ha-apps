@@ -7,6 +7,17 @@ declare -r INGEST_PATH=/cwa-book-ingest
 declare -r CALIBRE_LIBRARY_PATH=/calibre-library
 declare -r CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
 
+# Function to stop the script from running to debug the environment
+debug_script() {
+    if [ $(bashio::config "${debug_mode}") == "true" ]; then
+        bashio::log.info "Debug mode enabled, stopping script execution for debugging"
+        sleep infinity
+    fi
+}
+
+# Stop the script from continuing to debug the environment
+debug_script
+
 # Function to set environment variables based on add-on configuration
 set_env_var_from_config() {
     local config_key="${1}"
@@ -75,3 +86,6 @@ map_path "$(resolve_path 'calibre_plugins_path')" "${CALIBRE_PLUGINS_PATH}"
 
 
 bashio::log.info "Environment setup complete."
+
+# Stop the script from continuing to debug the environment
+debug_script

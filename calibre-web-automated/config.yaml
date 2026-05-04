@@ -36,3 +36,4 @@ schema:
   ingest_path: str
   calibre_library_path: str
   calibre_plugins_path: "str?"
+  debug_mode: bool
