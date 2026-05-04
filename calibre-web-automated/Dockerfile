@@ -28,7 +28,7 @@ RUN chmod +x /etc/s6-overlay/s6-rc.d/ha-config/up \
 
 # Set S6_BEHAVIOUR_IF_STAGE2_FAILS to 2 to ensure that if the stage 2 service fails,
 # the container will exit with an error code instead of trying to continue running.
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+# ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
 LABEL \
     org.opencontainers.image.title="Calibre Web Automated" \
