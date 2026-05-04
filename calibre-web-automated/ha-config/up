@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
@@ -9,8 +10,8 @@ declare -r CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
 
 # Function to stop the script from running to debug the environment
 debug_script() {
-    if [ $(bashio::config "${debug_mode}") == "true" ]; then
-        bashio::log.info "Debug mode enabled, stopping script execution for debugging"
+    if [ "$(bashio::config 'debug_mode')" == "true" ]; then
+        bashio::log.warn "Debug mode enabled, stopping script execution for debugging"
         sleep infinity
     fi
 }
