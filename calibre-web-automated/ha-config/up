@@ -5,26 +5,36 @@
 declare -r CONFIG_PATH=/config
 declare -r INGEST_PATH=/cwa-book-ingest
 declare -r CALIBRE_LIBRARY_PATH=/calibre-library
-declare -r CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins/
+declare -r CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
 
-declare hardcover_token
-declare network_share_mode
-declare config_path
-declare ingest_path
-declare calibre_library_path
-declare calibre_plugins_path
+# Function to set environment variables based on add-on configuration
+set_env_var_from_config() {
+    local config_key="${1}"
+    local env_name="${2}"
+    local config_value
 
-hardcover_token=$(bashio::config 'hard_cover_token')
-network_share_mode=$(bashio::config 'network_share_mode')
-config_path=$(bashio::config 'config_path')
-ingest_path=$(bashio::config 'ingest_path')
-calibre_library_path=$(bashio::config 'calibre_library_path')
-calibre_plugins_path=$(bashio::config 'calibre_plugins_path')
+    config_value=$(bashio::config "${config_key}")
+    if [ -z "${config_value}" ]; then
+        bashio::log.warning "Configuration value for ${config_key} is empty"
+        return
+    fi
+    echo -n "${config_value}" > "/etc/s6-overlay/env/${env_name}"
+}
 
-bashio::log.info "Configuring environment..."
-echo -n "${hardcover_token}" > /etc/s6-overlay/env/HARDCOVER_TOKEN
-echo -n "${network_share_mode}" > /etc/s6-overlay/env/NETWORK_SHARE_MODE
+# Function to resolve a path from the add-on configuration and ensure it is a valid absolute path
+resolve_path() {
+    local config_key="$1"
+    local resolved_path
 
+    resolved_path=$(realpath "/$(bashio::config "${config_key}")") || {
+        bashio::log.fatal "Failed to resolve ${config_key}: $(bashio::config "${config_key}")"
+        bashio::exit.nok
+    }
+
+    printf '%s' "${resolved_path}"
+}
+
+# Function to map a host directory to the application's expected path using a symbolic link
 map_path() {
     local mapped_path="${1}"
     local app_path="${2}"
@@ -33,6 +43,11 @@ map_path() {
     if ! bashio::fs.directory_exists "${mapped_path}"; then
         bashio::log.info "Creating directory ${mapped_path}"
         mkdir -p "${mapped_path}"
+    fi
+    # If the mapped path is the same as the app path, no need to create a symlink
+    if [ "${mapped_path}" == "${app_path}" ]; then
+        bashio::log.debug "Mapped path ${mapped_path} is the same as app path ${app_path}, skipping symlink creation"
+        return
     fi
     # If the app's default directory exists and isn't a link, move it or remove it
     if [ -d "${app_path}" ] && [ ! -L "${app_path}" ]; then
@@ -44,10 +59,19 @@ map_path() {
     bashio::log.success "Successfully mapped ${app_path} to ${mapped_path}"
 }
 
+# Main execution starts here
+bashio::log.info "Configuring environment..."
+
+set_env_var_from_config 'hard_cover_token' 'HARDCOVER_TOKEN'
+set_env_var_from_config 'network_share_mode' 'NETWORK_SHARE_MODE'
+
+
 bashio::log.info "Mapping paths..."
-map_path "${config_path}" "${CONFIG_PATH}"
-map_path "${ingest_path}" "${INGEST_PATH}"
-map_path "${calibre_library_path}" "${CALIBRE_LIBRARY_PATH}"
-map_path "${calibre_plugins_path}" "${CALIBRE_PLUGINS_PATH}"
+
+map_path "$(resolve_path 'config_path')" "${CONFIG_PATH}"
+map_path "$(resolve_path 'ingest_path')" "${INGEST_PATH}"
+map_path "$(resolve_path 'calibre_library_path')" "${CALIBRE_LIBRARY_PATH}"
+map_path "$(resolve_path 'calibre_plugins_path')" "${CALIBRE_PLUGINS_PATH}"
+
 
 bashio::log.info "Environment setup complete."
