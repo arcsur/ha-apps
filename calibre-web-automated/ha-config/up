@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bashio
+#!/usr/bin/env bashio
 # shellcheck shell=bash
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
