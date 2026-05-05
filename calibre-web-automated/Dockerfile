@@ -17,7 +17,7 @@ RUN curl -J -L -o /tmp/bashio.tar.gz "https://github.com/hassio-addons/bashio/ar
     && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
     && rm -rf /tmp/bashio.tar.gz /tmp/bashio
 
-# Copy your s6-rc service
+# Copy the ha-config s6-rc service
 COPY ha-config/ /etc/s6-overlay/s6-rc.d/ha-config/
 
 # Register the service in the user bundle and set permissions
@@ -25,6 +25,14 @@ RUN chmod +x /etc/s6-overlay/s6-rc.d/ha-config/up \
     && mkdir -p /etc/s6-overlay/s6-rc.d/user/contents.d \
     && touch /etc/s6-overlay/s6-rc.d/user/contents.d/ha-config \
     && touch /etc/s6-overlay/s6-rc.d/cwa-init/dependencies.d/ha-config
+
+# 1. Force remove all potential invisible characters/BOMs
+# 2. Force Unix line endings
+# 3. Ensure absolute ownership and permissions
+RUN sed -i '1s/^\xEF\xBB\xBF//' /etc/s6-overlay/s6-rc.d/ha-config/up \
+    && sed -i 's/\r$//' /etc/s6-overlay/s6-rc.d/ha-config/up \
+    && chown root:root /etc/s6-overlay/s6-rc.d/ha-config/up \
+    && chmod 755 /etc/s6-overlay/s6-rc.d/ha-config/up
 
 # Set S6_BEHAVIOUR_IF_STAGE2_FAILS to 2 to ensure that if the stage 2 service fails,
 # the container will exit with an error code instead of trying to continue running.
