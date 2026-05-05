@@ -4,8 +4,17 @@
 # Function to stop the script from running to debug the environment
 debug_script() {
     if [ "$(bashio::config 'debug_mode')" == "true" ]; then
-        bashio::log.warning "Debug mode enabled, stopping script execution for debugging"
-        sleep infinity
+        bashio::log.warning "Debug mode enabled. Pausing script."
+        bashio::log.info "To resume, run: kill -USR1 $$"
+
+        # Trap the USR1 signal to do nothing (just wakes up 'wait')
+        trap ":" USR1
+
+        # Wait indefinitely until a signal is received
+        wait $!
+
+        bashio::log.info "Signal received! Resuming execution..."
+        trap - USR1 # Clean up the trap
     fi
 }
 
