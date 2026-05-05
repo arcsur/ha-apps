@@ -7,14 +7,17 @@ debug_script() {
         bashio::log.warning "Debug mode enabled. Pausing script."
         bashio::log.info "To resume, run: kill -USR1 $$"
 
-        # Trap the USR1 signal to do nothing (just wakes up 'wait')
         trap ":" USR1
 
-        # Wait indefinitely until a signal is received
-        wait $!
+        # Start background task and wait for it
+        sleep infinity &
+        local SLEEP_PID=$!
+        wait $SLEEP_PID
 
+        # Cleanup: kill the sleep process and clear the trap
+        kill $SLEEP_PID 2>/dev/null
+        trap - USR1
         bashio::log.info "Signal received! Resuming execution..."
-        trap - USR1 # Clean up the trap
     fi
 }
 
