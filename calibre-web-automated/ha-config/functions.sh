@@ -9,7 +9,7 @@ debug_script() {
     fi
 }
 
- Function to retrieve a configuration value and log if it is empty
+# Function to retrieve a configuration value and log if it is empty
 get_config_value() {
     local config_key="${1}"
     local config_value
