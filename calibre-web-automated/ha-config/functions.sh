@@ -32,7 +32,7 @@ set_env_var_from_config() {
         bashio::log.debug "Skipping setting environment variable for empty ${config_key}"
         return
     fi
-    echo -n "${config_value}" > "/etc/s6-overlay/env/${env_name}"
+    printf '%s' "${config_value}" > "/var/run/s6/container_environment/${env_name}"
 }
 
 # Function to resolve a path from the add-on configuration and ensure it is a valid absolute path
