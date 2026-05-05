@@ -1,6 +1,8 @@
-#!/usr/bin/with-contenv bash
+#!/usr/bin/bash
 # shellcheck shell=bash
 # shellcheck source=/dev/null
+
+. /etc/s6-overlay/bin/set-contenv
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
