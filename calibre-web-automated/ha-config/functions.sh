@@ -2,9 +2,9 @@
 # shellcheck shell=bash
 
 # Function to stop the script from running to debug the environment
-debug_script() {
+debug_wait() {
     if [ "$(bashio::config 'debug_mode')" == "true" ]; then
-        bashio::log.warning "Debug mode enabled. Pausing script."
+        bashio::log.info "Debug mode enabled. Pausing script."
 
         # Start background task and wait for it
         sleep infinity &
@@ -14,6 +14,20 @@ debug_script() {
 
         bashio::log.info "Signal received! Resuming execution..."
     fi
+}
+
+trap_handler() {
+    local exit_code="$1"
+    local line_number=${2:-BASH_LINENO}
+    local command="${3:-${BASH_COMMAND}}"
+
+    bashio::log.error "Error ${exit_code} occurred during execution.\n[${line_number}] ${command}"
+    debug_wait
+    exit "${exit_code}"
+}
+
+debug_trap() {
+    trap -e 'trap_handler $? ${LINENO} "${BASH_COMMAND}"' ERR
 }
 
 # Function to retrieve a configuration value and log if it is empty
