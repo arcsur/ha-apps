@@ -1,7 +1,13 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # shellcheck source=/dev/null
-source "$(dirname "$0")/functions.sh"
+SCRIPT_FILE="$0"
+source "$(dirname "${SCRIPT_FILE}")/functions.sh"
+trap 'bashio::log.error "Error occured during execution. Check the logs for details." && debug_script' ERR
+
+# Stop the script from continuing to debug the environment
+bashio::log.debug "Start of ${SCRIPT_FILE} script execution"
+debug_script
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
@@ -9,9 +15,6 @@ readonly CONFIG_PATH=/config
 readonly INGEST_PATH=/cwa-book-ingest
 readonly CALIBRE_LIBRARY_PATH=/calibre-library
 readonly CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
-
-# Stop the script from continuing to debug the environment
-debug_script
 
 # Main execution starts here
 bashio::log.info "Configuring environment..."
@@ -27,4 +30,5 @@ map_path "$(resolve_path 'calibre_plugins_path')" "${CALIBRE_PLUGINS_PATH}"
 bashio::log.info "Environment setup complete."
 
 # Stop the script from continuing to debug the environment
+bashio::log.debug "End of ${SCRIPT_FILE} script execution"
 debug_script
