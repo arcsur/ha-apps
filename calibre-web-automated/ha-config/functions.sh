@@ -27,7 +27,7 @@ trap_handler() {
 }
 
 debug_trap() {
-    trap -e 'trap_handler $? ${LINENO} "${BASH_COMMAND}"' ERR
+    trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"' ERR
 }
 
 # Function to retrieve a configuration value and log if it is empty
