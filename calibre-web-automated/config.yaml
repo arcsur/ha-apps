@@ -32,5 +32,5 @@ schema:
   calibre_library_path: str
   calibre_library_books_path: "str?"
   calibre_plugins_path: "str?"
-  hard_cover_token: "str?"
+  hardcover_token: "str?"
   debug_mode: "bool?"

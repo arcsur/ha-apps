@@ -5,10 +5,6 @@ SCRIPT_FILE="$0"
 source "$(dirname "${SCRIPT_FILE}")/functions.sh"
 debug_setup
 
-# Stop the script from continuing to debug the environment
-bashio::log.debug "Start of ${SCRIPT_FILE} script execution"
-debug_wait
-
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
 readonly INGEST_PATH=/cwa-book-ingest/ingest
@@ -20,7 +16,7 @@ readonly CWA_APP_DB=/config/app.db
 # Main execution starts here
 bashio::log.info "Configuring environment..."
 set_env_var 'NETWORK_SHARE_MODE' 'true'
-set_env_var_from_config 'hard_cover_token' 'HARDCOVER_TOKEN'
+set_env_var_from_config 'hardcover_token' 'HARDCOVER_TOKEN'
 
 bashio::log.info "Mapping paths..."
 map_path "$(resolve_path 'ingest_path')" "${INGEST_PATH}"

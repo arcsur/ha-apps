@@ -41,7 +41,7 @@ get_config_value() {
     local config_value
 
     config_value=$(bashio::config "${config_key}")
-    if [ "${config_value}" = "null" ]; then
+    if [ -z "${config_value}" ] || [ "${config_value}" = "null" ]; then
         bashio::log.debug "Configuration value for ${config_key} is empty"
         config_value=""
     fi
