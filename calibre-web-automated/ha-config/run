@@ -15,7 +15,7 @@ readonly CWA_APP_DB=/config/app.db
 
 # Main execution starts here
 bashio::log.info "Configuring environment..."
-set_env_var 'NETWORK_SHARE_MODE' 'false'
+set_env_var 'NETWORK_SHARE_MODE' 'true'
 set_env_var_from_config 'hardcover_token' 'HARDCOVER_TOKEN'
 
 bashio::log.info "Mapping paths..."
@@ -32,6 +32,9 @@ fi
 sqlite3 "${CWA_APP_DB}" <<END
     update settings set config_calibre_split=True, config_calibre_split_dir='${CALIBRE_LIBRARY_BOOKS_PATH}';
 END
+
+bashio::log.info "Configuring file ownership..."
+chown abc:abc -RL /config /calibre-library /cwa-book-ingest
 
 bashio::log.info "Environment setup complete."
 
