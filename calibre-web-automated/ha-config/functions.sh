@@ -68,8 +68,8 @@ set_env_var_from_config() {
 
 # Function to resolve a path from the add-on configuration and ensure it is a valid absolute path
 resolve_path() {
-    local config_key="$1"
-    local default_path="$2"
+    local config_key="${1}"
+    local default_path="${2:-}"
     local config_value
     local resolved_path
 
@@ -101,7 +101,7 @@ resolve_path() {
 map_path() {
     local mapped_path="${1}"
     local app_path="${2}"
-    local file_name="${3}"
+    local file_name="${3:-}"
 
     # If the mapped path is the same as the app path, no need to create a symlink
     if [ -z "${mapped_path}" ] || [ "${mapped_path}" == "${app_path}" ]; then
