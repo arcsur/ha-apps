@@ -21,8 +21,10 @@ trap_handler() {
     local line_number=${2:-BASH_LINENO}
     local command="${3:-${BASH_COMMAND}}"
 
-    bashio::log.error "Error ${exit_code} occurred during execution.\n[${line_number}] ${command}"
-    debug_wait
+    if [ "${exit_code}" -ne 0 ]; then
+        bashio::log.error "Error ${exit_code} occurred during execution.\n[${line_number}] ${command}"
+        debug_wait
+    fi
     return "${exit_code}"
 }
 
@@ -32,7 +34,7 @@ debug_setup() {
         bashio::log.level debug
     fi
     set -E
-    trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"; exit $?' ERR
+    trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"; exit $?' EXIT
 }
 
 # Function to retrieve a configuration value with a default value option and log if it is empty
