@@ -26,7 +26,7 @@ bashio::log.info "Mapping paths..."
 map_path "$(resolve_path 'ingest_path')" "${INGEST_PATH}"
 map_path "$(resolve_path 'calibre_library_path')" "${CALIBRE_LIBRARY_PATH}" "metadata.db"
 map_path "$(resolve_path 'calibre_library_books_path' "${CALIBRE_LIBRARY_PATH}")" "${CALIBRE_LIBRARY_BOOKS_PATH}"
-map_path "$(resolve_path 'calibre_plugins_path')" "${CALIBRE_PLUGINS_PATH}"
+map_path "$(resolve_path 'calibre_plugins_path' "${CALIBRE_PLUGINS_PATH}")" "${CALIBRE_PLUGINS_PATH}"
 
 bashio::log.info "Configuring application settings..."
 if [ ! -f "${CWA_APP_DB}" ]; then
