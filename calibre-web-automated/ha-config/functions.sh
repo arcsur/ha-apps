@@ -56,6 +56,7 @@ set_env_var() {
     local env_name="${1}"
     local env_value="${2}"
 
+    bashio::log.debug "Setting environment variable ${env_name} to ${env_value}"
     printf '%s' "${env_value}" > "/var/run/s6/container_environment/${env_name}"
 }
 
