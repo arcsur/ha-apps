@@ -17,7 +17,7 @@ debug_wait() {
 }
 
 trap_handler() {
-    local exit_code="$1"
+    local exit_code="${1}"
     local line_number=${2:-BASH_LINENO}
     local command="${3:-${BASH_COMMAND}}"
 
@@ -76,7 +76,7 @@ resolve_path() {
     config_value=$(get_config_value "${config_key}")
     if [ -z "${config_value}" ]; then
         if [ -n "${default_path}" ]; then
-            bashio::log.info "No path configured for ${config_key}, using default: ${default_path}"
+            bashio::log.debug "No path configured for ${config_key}, using default: ${default_path}"
             config_value="${default_path}"
         else
             bashio::log.warning "No path configured for ${config_key}"
@@ -85,7 +85,7 @@ resolve_path() {
     fi
     # Ensure the host-mapped directory exists (e.g., /share/my_folder)
     if ! bashio::fs.directory_exists "${config_value}"; then
-        bashio::log.info "Creating directory ${config_value}"
+        bashio::log.debug "Creating directory ${config_value}"
         mkdir -p "${config_value}"
     fi
     # Resolve the absolute path inside the container
@@ -116,9 +116,9 @@ map_path() {
     # Create the link
     if [ -n "${file_name}" ]; then
         ln -s "${mapped_path}/${file_name}" "${app_path}/${file_name}"
-        bashio::log.success "Successfully mapped ${app_path}/${file_name} to ${mapped_path}/${file_name}"
+        bashio::log.info "Successfully mapped ${app_path}/${file_name} to ${mapped_path}/${file_name}"
     else
         ln -s "${mapped_path}" "${app_path}"
-        bashio::log.success "Successfully mapped ${app_path} to ${mapped_path}"
+        bashio::log.info "Successfully mapped ${app_path} to ${mapped_path}"
     fi
 }
