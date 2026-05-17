@@ -21,10 +21,8 @@ trap_handler() {
     local line_number=${2:-BASH_LINENO}
     local command="${3:-${BASH_COMMAND}}"
 
-    if [ ! "${exit_code}" -eq 0 ]; then
-        bashio::log.error "Error ${exit_code} occurred during execution.\n[${line_number}] ${command}"
-        debug_wait
-    fi
+    bashio::log.error "Error ${exit_code} occurred during execution.\n[${line_number}] ${command}"
+    debug_wait
     return "${exit_code}"
 }
 
@@ -33,7 +31,8 @@ debug_setup() {
         bashio::log.info "Debug mode enabled. Setting log level to debug."
         bashio::log.level debug
     fi
-    trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"; exit $?' EXIT
+    set -E
+    trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"; exit $?' ERR
 }
 
 # Function to retrieve a configuration value and log if it is empty
@@ -42,7 +41,7 @@ get_config_value() {
     local config_value
 
     config_value=$(bashio::config "${config_key}")
-    if [ -z "${config_value}" ]; then
+    if [ "${config_value}" = "null" ]; then
         bashio::log.debug "Configuration value for ${config_key} is empty"
     fi
     printf '%s' "${config_value}"
@@ -120,9 +119,9 @@ map_path() {
     # Create the link
     if [ -n "${file_name}" ]; then
         ln -s "${mapped_path}/${file_name}" "${app_path}/${file_name}"
-        bashio::log.info "Successfully mapped ${app_path}/${file_name} to ${mapped_path}/${file_name}"
+        bashio::log.info "Successfully mapped ${mapped_path}/${file_name} to ${app_path}/${file_name}"
     else
         ln -s "${mapped_path}" "${app_path}"
-        bashio::log.info "Successfully mapped ${app_path} to ${mapped_path}"
+        bashio::log.info "Successfully mapped ${mapped_path} to ${app_path}"
     fi
 }
