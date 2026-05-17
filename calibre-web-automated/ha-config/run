@@ -11,21 +11,31 @@ debug_wait
 
 # This script is responsible for setting up the environment for the Calibre Web Automated add-on.
 # It reads configuration options, prepares necessary directories, and ensures that the application has access to the required paths.
-readonly CONFIG_PATH=/config
-readonly INGEST_PATH=/cwa-book-ingest
+readonly INGEST_PATH=/cwa-book-ingest/ingest
 readonly CALIBRE_LIBRARY_PATH=/calibre-library
+readonly CALIBRE_LIBRARY_BOOKS_PATH=/calibre-library/books
 readonly CALIBRE_PLUGINS_PATH=/config/.config/calibre/plugins
+readonly CWA_APP_DB=/config/app.db
 
 # Main execution starts here
 bashio::log.info "Configuring environment..."
+set_env_var 'NETWORK_SHARE_MODE' 'true'
 set_env_var_from_config 'hard_cover_token' 'HARDCOVER_TOKEN'
-set_env_var_from_config 'network_share_mode' 'NETWORK_SHARE_MODE'
 
 bashio::log.info "Mapping paths..."
-map_path "$(resolve_path 'config_path')" "${CONFIG_PATH}"
 map_path "$(resolve_path 'ingest_path')" "${INGEST_PATH}"
-map_path "$(resolve_path 'calibre_library_path')" "${CALIBRE_LIBRARY_PATH}"
+map_path "$(resolve_path 'calibre_library_path')" "${CALIBRE_LIBRARY_PATH}" "metadata.db"
+map_path "$(resolve_path 'calibre_library_books_path' "${CALIBRE_LIBRARY_PATH}")" "${CALIBRE_LIBRARY_BOOKS_PATH}"
 map_path "$(resolve_path 'calibre_plugins_path')" "${CALIBRE_PLUGINS_PATH}"
+
+bashio::log.info "Configuring application settings..."
+if [ ! -f "${CWA_APP_DB}" ]; then
+    bashio::log.warn "No existing app.db found! Creating new one..."
+    cp /app/calibre-web-automated/empty_library/app.db "${CWA_APP_DB}"
+fi
+sqlite3 "${CWA_APP_DB}" <<END
+    update settings set config_calibre_split=True, config_calibre_split_dir='${CALIBRE_LIBRARY_BOOKS_PATH}';
+END
 
 bashio::log.info "Environment setup complete."
 

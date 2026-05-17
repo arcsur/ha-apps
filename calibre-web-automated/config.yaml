@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: Calibre Web Automated
-version: "0.6.10"
+version: "0.7.0"
 slug: calibre-web-automated
 description: Calibre-Web Automated aims to be an all-in-one solution, combining the modern lightweight web UI from Calibre-Web with the robust, versatile feature set of Calibre, with a slew of extra features and automations thrown in on top.
 url: "https://github.com/arcsur/ha-apps/tree/main/calibre-web-automated"
@@ -25,15 +25,12 @@ map:
   - type: media
     read_only: false
 options:
-  network_share_mode: false
-  config_path: "/config"
-  ingest_path: "/share/cwa-book-ingest"
   calibre_library_path: "/media/calibre-library"
+  ingest_path: "/share/cwa-book-ingest"
 schema:
-  network_share_mode: bool
-  config_path: str
   ingest_path: str
   calibre_library_path: str
+  calibre_library_books_path: "str?"
   calibre_plugins_path: "str?"
   hard_cover_token: "str?"
   debug_mode: "bool?"
