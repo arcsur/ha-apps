@@ -63,7 +63,7 @@ set_env_var_from_config() {
     local env_name="${2}"
     local config_value
 
-    config_value=$(get_config_value "${config_key}")
+    config_value="$(get_config_value "${config_key}")"
     if [ -z "${config_value}" ]; then
         bashio::log.debug "Skipping setting environment variable for empty ${config_key}"
         return
@@ -78,7 +78,7 @@ resolve_path() {
     local config_value
     local resolved_path
 
-    config_value=$(get_config_value "${config_key}" "${default_path}")
+    config_value="$(get_config_value "${config_key}" "${default_path}")"
     if [ -z "${config_value}" ]; then
         bashio::log.fatal "No path configured for ${config_key}"
         bashio::exit.nok
@@ -89,7 +89,7 @@ resolve_path() {
         mkdir -p "${config_value}"
     fi
     # Resolve the absolute path inside the container
-    resolved_path=$(realpath "/${config_value}") || {
+    resolved_path="$(realpath "/${config_value}")" || {
         bashio::log.fatal "Failed to resolve ${config_key}: ${config_value}"
         bashio::exit.nok
     }
