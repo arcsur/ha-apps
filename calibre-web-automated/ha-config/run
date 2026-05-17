@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 SCRIPT_FILE="$0"
 source "$(dirname "${SCRIPT_FILE}")/functions.sh"
-debug_trap
+debug_setup
 
 # Stop the script from continuing to debug the environment
 bashio::log.debug "Start of ${SCRIPT_FILE} script execution"

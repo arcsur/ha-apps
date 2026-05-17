@@ -28,7 +28,11 @@ trap_handler() {
     return "${exit_code}"
 }
 
-debug_trap() {
+debug_setup() {
+    if [ "$(bashio::config 'debug_mode')" == "true" ]; then
+        bashio::log.info "Debug mode enabled. Setting log level to debug."
+        bashio::log.level debug
+    fi
     trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"; exit $?' EXIT
 }
 
