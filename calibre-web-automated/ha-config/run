@@ -16,7 +16,7 @@ readonly CWA_APP_DB=/config/app.db
 # Main execution starts here
 bashio::log.info "Configuring environment..."
 set_env_var 'NETWORK_SHARE_MODE' 'true'
-set_env_var_from_config 'hardcover_token' 'HARDCOVER_TOKEN'
+#set_env_var_from_config 'hardcover_token' 'HARDCOVER_TOKEN'
 
 bashio::log.info "Mapping paths..."
 map_path "$(resolve_path 'ingest_path')" "${INGEST_PATH}"
