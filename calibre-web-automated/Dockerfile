@@ -27,7 +27,7 @@ RUN chmod +x /etc/s6-overlay/s6-rc.d/ha-config/run \
 
 # Set S6_BEHAVIOUR_IF_STAGE2_FAILS to 2 to ensure that if the stage 2 service fails,
 # the container will exit with an error code instead of trying to continue running.
-# ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 ENV PUID=1000
 ENV PGID=1000
 

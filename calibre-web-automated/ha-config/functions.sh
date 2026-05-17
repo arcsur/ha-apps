@@ -35,15 +35,15 @@ debug_setup() {
     trap 'trap_handler $? ${LINENO} "${BASH_COMMAND}"; exit $?' ERR
 }
 
-# Function to retrieve a configuration value and log if it is empty
+# Function to retrieve a configuration value with a default value option and log if it is empty
 get_config_value() {
     local config_key="${1}"
+    local default_value="${2:-}"
     local config_value
 
-    config_value=$(bashio::config "${config_key}")
-    if [ -z "${config_value}" ] || [ "${config_value}" = "null" ]; then
+    config_value=$(bashio::config "${config_key}" "${default_value}")
+    if [ -z "${config_value}" ]; then
         bashio::log.debug "Configuration value for ${config_key} is empty"
-        config_value=""
     fi
     printf '%s' "${config_value}"
 }
@@ -77,15 +77,10 @@ resolve_path() {
     local config_value
     local resolved_path
 
-    config_value=$(get_config_value "${config_key}")
+    config_value=$(get_config_value "${config_key}" "${default_path}")
     if [ -z "${config_value}" ]; then
-        if [ -n "${default_path}" ]; then
-            bashio::log.debug "No path configured for ${config_key}, using default: ${default_path}"
-            config_value="${default_path}"
-        else
-            bashio::log.warning "No path configured for ${config_key}"
-            return
-        fi
+        bashio::log.fatal "No path configured for ${config_key}"
+        bashio::exit.nok
     fi
     # Ensure the host-mapped directory exists (e.g., /share/my_folder)
     if ! bashio::fs.directory_exists "${config_value}"; then

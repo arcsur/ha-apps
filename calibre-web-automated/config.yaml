@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-configuration
 name: Calibre Web Automated
-version: "0.7.6"
+version: "0.7.7"
 slug: calibre-web-automated
 description: Calibre-Web Automated aims to be an all-in-one solution, combining the modern lightweight web UI from Calibre-Web with the robust, versatile feature set of Calibre, with a slew of extra features and automations thrown in on top.
 url: "https://github.com/arcsur/ha-apps/tree/main/calibre-web-automated"
