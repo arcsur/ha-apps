@@ -41,9 +41,10 @@ get_config_value() {
     local config_value
 
     bashio::log.debug "Configuration key ${config_key} requested"
-    config_value=$(bashio::config "${config_key}" "${default_value}")
-    if [ -z "${config_value}" ]; then
+    config_value=$(bashio::config "${config_key}")
+    if [ -z "${config_value}" ] || [ "${config_value}" = "null" ]; then
         bashio::log.error "Configuration value for ${config_key} is empty"
+        config_value="${default_value}"
     fi
     printf '%s' "${config_value}"
 }
