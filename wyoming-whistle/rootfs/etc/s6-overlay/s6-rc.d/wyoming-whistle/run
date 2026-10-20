@@ -1,0 +1,23 @@
+#!/command/with-contenv bashio
+# vim: ft=bash
+# shellcheck shell=bash
+# ==============================================================================
+# Start Wyoming Whistle service
+# ==============================================================================
+flags=()
+
+language="$(bashio::config 'language')"
+if [ "${language}" != "auto" ] && [ -n "${language}" ]; then
+    flags+=("--language" "${language}")
+fi
+
+if bashio::config.true 'debug'; then
+    flags+=("--debug")
+fi
+
+bashio::log.info "Starting Wyoming Whistle server on port 10300..."
+
+exec python3 -m wyoming_whistle \
+    --uri "tcp://0.0.0.0:10300" \
+    --zeroconf \
+    "${flags[@]}"

@@ -1,0 +1,10 @@
+---
+configuration:
+  language:
+    name: Language
+    description: Default language for transcription, or auto to detect automatically. Supported languages are English (en), German (de), French (fr), Spanish (es), Italian (it), Dutch (nl), and Polish (pl).
+  debug:
+    name: Debug logging
+    description: Print verbose debug-level messages to the app log.
+network:
+  10300/tcp: Wyoming Protocol

@@ -1,0 +1,25 @@
+---
+name: Wyoming Whistle
+version: "1.0.0"
+slug: wyoming-whistle
+description: Ultra-lightweight local Speech-to-Text using Cactus Compute's Whistle model via Wyoming protocol.
+url: "https://github.com/arcsur/ha-apps/tree/main/wyoming-whistle"
+arch:
+  - aarch64
+  - amd64
+init: false
+discovery:
+  - wyoming
+backup_exclude:
+  - "models*"
+ports:
+  10300/tcp: null
+ports_description:
+  10300/tcp: Wyoming Protocol
+options:
+  language: auto
+  debug: false
+schema:
+  language: list(auto|en|de|fr|es|it|nl|pl)
+  debug: bool
+image: "ghcr.io/arcsur/wyoming-whistle"
