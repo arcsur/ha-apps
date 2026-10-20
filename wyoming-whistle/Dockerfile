@@ -1,5 +1,5 @@
 # https://developers.home-assistant.io/docs/apps/configuration#app-dockerfile
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/base-debian:bookworm
 FROM ${BUILD_FROM}
 
 ARG TARGETARCH
