@@ -6,6 +6,8 @@
 # ==============================================================================
 flags=()
 
+export PYTHONPATH="/usr/src:${PYTHONPATH}"
+
 language="$(bashio::config 'language')"
 if [ "${language}" != "auto" ] && [ -n "${language}" ]; then
     flags+=("--language" "${language}")

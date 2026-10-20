@@ -35,6 +35,7 @@ RUN mkdir -p /usr/share/whistle \
     && /usr/src/.venv/bin/python3 -c "import needle.agent.fetch as f; f.fetch_library(version='3.3.3', dest_dir='/usr/share/whistle', tag='${needle_tag}', generation=3)"
 
 ENV PATH="/usr/src/.venv/bin:$PATH"
+ENV PYTHONPATH="/usr/src"
 ENV NEEDLE_WHISTLE_WEIGHTS="/usr/share/whistle/whistle.cact"
 ENV NEEDLE3_LIB_PATH="/usr/share/whistle/libneedle.so"
 
@@ -50,7 +51,7 @@ LABEL \
     io.hass.name="Wyoming Whistle" \
     io.hass.description="Ultra-lightweight local Speech-to-Text using Cactus Compute's Whistle model via Wyoming protocol" \
     io.hass.type="app" \
-    io.hass.version="1.0.0"
+    io.hass.version="1.0.1"
 
 HEALTHCHECK --start-period=30s --interval=30s --timeout=5s --retries=3 \
     CMD echo '{"type": "describe"}' | nc -w 1 localhost 10300 | grep -q "whistle" || exit 1

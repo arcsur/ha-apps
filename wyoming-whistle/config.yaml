@@ -1,6 +1,6 @@
 ---
 name: Wyoming Whistle
-version: "1.0.0"
+version: "1.0.1"
 slug: wyoming-whistle
 description: Ultra-lightweight local Speech-to-Text using Cactus Compute's Whistle model via Wyoming protocol.
 url: "https://github.com/arcsur/ha-apps/tree/main/wyoming-whistle"

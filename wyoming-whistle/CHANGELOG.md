@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Set PYTHONPATH so `wyoming_whistle` module is discovered on startup.
+
 ## 1.0.0
 
 - Initial release of Wyoming Whistle.
